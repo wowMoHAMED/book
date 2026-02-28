@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auteur</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="navbar">
+  <div><strong>My Day</strong></div>
+  <div>
+    <a href="/">Home</a>
+    <a href="/auteur.html">Auteur</a>
+    <button onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<h2>Ajouter / Gérer Posts</h2>
+
+<form id="addPostForm" enctype="multipart/form-data">
+  <input type="text" name="title_ar" placeholder="Titre Arabe" required>
+  <textarea name="text_ar" placeholder="Texte Arabe" required></textarea>
+
+  <input type="text" name="title_en" placeholder="Title English" required>
+  <textarea name="text_en" placeholder="Text English" required></textarea>
+
+  <input type="text" name="title_fr" placeholder="Titre Français" required>
+  <textarea name="text_fr" placeholder="Texte Français" required></textarea>
+
+  <input type="file" name="image" accept="image/*">
+
+  <button type="submit">Ajouter</button>
+</form>
+
+<p class="success" id="message"></p>
+
+<h2 style="text-align:center">Liste des Posts</h2>
+<div id="postList"></div>
+
+<script>
+const postList = document.getElementById('postList');
+const addForm = document.getElementById('addPostForm');
+const message = document.getElementById('message');
+
+let editingId = null;
+
+/* ===============================
+   LOGOUT
+=================================*/
+async function logout(){
+  await fetch('/api/logout');
+  window.location = "/login.html";
+}
+
+/* ===============================
+   CHARGER POSTS
+=================================*/
+async function loadPosts() {
+  const res = await fetch('/api/posts');
+  const posts = await res.json();
+
+  postList.innerHTML = '';
+
+  posts.forEach(post => {
+    const div = document.createElement('div');
+    div.classList.add('post-block');
+
+    div.innerHTML = `
+      <img src="${post.image}" width="100%">
+      <h4>${post.title_fr}</h4>
+      <button class="edit-btn">Modifier</button>
+      <button class="delete-btn">Supprimer</button>
+    `;
+
+    // Modifier
+    div.querySelector('.edit-btn').addEventListener('click', () => {
+      startEdit(post);
+    });
+
+    // Supprimer
+    div.querySelector('.delete-btn').addEventListener('click', () => {
+      deletePost(post._id);
+    });
+
+    postList.appendChild(div);
+  });
+}
+
+/* ===============================
+   START EDIT
+=================================*/
+function startEdit(post) {
+  editingId = post._id;
+
+  addForm.title_ar.value = post.title_ar;
+  addForm.text_ar.value = post.text_ar;
+  addForm.title_en.value = post.title_en;
+  addForm.text_en.value = post.text_en;
+  addForm.title_fr.value = post.title_fr;
+  addForm.text_fr.value = post.text_fr;
+
+  document.querySelector("button[type='submit']").innerText = "Mettre à jour";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ===============================
+   AJOUTER OU MODIFIER
+=================================*/
+addForm.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const formData = new FormData(addForm);
+
+  if (editingId) {
+    // UPDATE
+    await fetch(`/api/post/${editingId}`, {
+      method: 'PUT',
+      body: formData
+    });
+
+    message.innerText = "Post mis à jour ✔";
+  } else {
+    // ADD
+    await fetch('/api/post/add', {
+      method: 'POST',
+      body: formData
+    });
+
+    message.innerText = "Post ajouté ✔";
+  }
+
+  // Reset
+  editingId = null;
+  addForm.reset();
+  document.querySelector("button[type='submit']").innerText = "Ajouter";
+
+  // 🔥 Notifier Home
+  localStorage.setItem("update", Date.now());
+
+  loadPosts();
+});
+
+/* ===============================
+   SUPPRIMER
+=================================*/
+async function deletePost(id){
+  if(confirm('Voulez-vous supprimer ce post ?')){
+    await fetch(`/api/post/${id}`, { method: 'DELETE' });
+
+    message.innerText = "Post supprimé ✔";
+
+    // 🔥 Notifier Home
+    localStorage.setItem("update", Date.now());
+
+    loadPosts();
+  }
+}
+
+loadPosts();
+</script>
+
+</body>
+</html>
