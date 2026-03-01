@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const Auteur = require('./models/Auteur'); // corrige le chemin selon ton projet
 
 const app = express();
-app.use(express.static(path.join(__dirname, "public"))); 
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -111,6 +111,7 @@ app.get('/logout', (req, res) => {
 });
 
 // Route API
+
 
 
 module.exports = app;
