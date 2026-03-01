@@ -29,8 +29,8 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch(err => console.log(err));
 
 // Routes API
-const apiRoutes = require('./api/index');
-app.use('/api', apiRoutes);
+const apRoutes = require('./routes/book');
+app.use('/book', apRoutes);
 
 // Pages front
 app.get('/', (req, res) => {
@@ -111,7 +111,6 @@ app.get('/logout', (req, res) => {
 });
 
 // Route API
-
 
 
 module.exports = app;
