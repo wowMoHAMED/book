@@ -3,37 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Day</title>
+<title>MYDY</title>
 
 <link rel="stylesheet" href="/style.css">
  <link rel="icon" type="image" sizes="200x180" href="/uploads/Dy! (1).png">
 </head>
-<body>
-
-<!-- NAVBAR -->
+<header>
 <div class="navbar">
-  <h1><strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong></h1>
-  <div class="nav-links">
-    <a href="/">Home</a>
-    <a href="/loginfirst">Auteur</a>
+  <h1>
+    <strong style="color: rgb(242, 99, 43);">M</strong>
+    <strong style="color: rgb(96, 106, 114);">Y</strong>
+    <strong style="color: rgb(242, 99, 43);">D</strong>
+    <strong style="color: rgb(96, 106, 114);">Y</strong>
+  </h1>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Rechercher un titre..." oninput="searchPosts()">
   </div>
+
+  
+  
+<!-- Hamburger -->
+ <div class="menu-toggle" id="menuToggle">
+    ☰
+  </div>
+  <!-- Menu links -->
+  <div class="nav-links" id="navLinks">
+    <button id="darkModeToggle">🌙</button>
+   <!-- Lecteur audio caché -->
+
+
+<!-- Lecteur audio caché -->
+<!-- Lecteur audio caché -->
+<audio id="backgroundMusic"></audio>
+
+<!-- Sélection de musique -->
+<select id="musicSelect">
+  <option value="/music/30 Minutes Relaxing Felt Piano __ Original Music by Jacob_s Piano(MP3_160K).mp3">calme 1</option>
+  <option value="/music/Motivational Music For Creativity and Studying - Reflections Full Album(MP3_160K).mp3">clame 2</option>
+  <option value="/music/Peaceful _ Inspiring Ambient Music to draw_ relax _ study to 🧸📚✨(MP3_160K).mp3">clame 3</option>
+</select>
+
+
+<!-- Bouton Play / Pause -->
+<button id="musicToggle">🎵</button>
+    <a href="/">🏠Home</a>
+    <a href="/loginfirst">✍️Auteur</a>
+  
+  </div>
+   
 </div>
 
+</header>
 <!-- CONTENT -->
-<div class="container">
-  <h1>Bienvenue sur <strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> !</h1>
 
-  <div class="language-buttons">
-    <button onclick="loadContent('ar')">العربية</button>
-    <button onclick="loadContent('en')">English</button>
-    <button onclick="loadContent('fr')">Français</button>
+ <div class="language-buttons">
+      <button onclick="loadContent('ar')">العربية</button>
+      <button onclick="loadContent('en')">English</button>
+      <button onclick="loadContent('fr')">Français</button>
+    </div>
+    <br>
+    <br>
+    
+<div class="container">
+  
+  
+<div class="marquee">
+  <div class="marquee-content">
+    Bienvenue sur <strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong>——
+     MYDY est une plateforme pour lire confortablement et découvrir de nouvelles informations.——
+    MYDY is a platform to read comfortably and discover new information.——
+   MYDY هي منصة للقراءة براحة واكتشاف معلومات جديدة——
+    pour plus d'informations contactez-nous sur :<strong style="color: rgb(28, 110, 24);"> 0657274965 </strong>
   </div>
+</div>
+ 
 
   <div id="posts"></div>
 </div>
 
 <footer>
-  © 2026 - <STrong>My Day</STrong> developpé par chiguer.M
+  © 2026 - <STrong>
+    <h3><strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong></h3>
+  </STrong> developpé par chiguer.M
 </footer>
 <script>
 let currentLang = 'fr';
@@ -81,6 +133,173 @@ window.addEventListener("storage", function(event) {
   if (event.key === "update") {
     loadContent(currentLang);
   }
+});
+
+</script>
+<script>
+
+let allPosts = []; // stocker tous les posts
+
+async function loadContent(lang) {
+  currentLang = lang;
+
+  const res = await fetch('/book/posts');
+  const posts = await res.json();
+  allPosts = posts; // sauvegarde
+
+  displayPosts(posts);
+}
+
+// Fonction pour afficher les posts
+function displayPosts(posts) {
+  const container = document.getElementById('posts');
+  container.innerHTML = '';
+
+  posts.forEach(post => {
+    const div = document.createElement('div');
+    div.classList.add('post');
+
+    div.innerHTML = `
+      <h2 class="${currentLang === 'ar' ? 'arabic' : ''}">
+        ${post['title_' + currentLang]}
+      </h2>
+      <img src="${post.image}" alt="Image">
+      <p class="${currentLang === 'ar' ? 'arabic' : ''}">
+        ${post['text_' + currentLang]}
+      </p>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+// Fonction de recherche automatique
+function searchPosts() {
+  const value = document.getElementById('searchInput').value.toLowerCase();
+
+  const filtered = allPosts.filter(post =>
+    post.title_fr.toLowerCase().includes(value) ||
+    post.title_en.toLowerCase().includes(value) ||
+    post.title_ar.toLowerCase().includes(value)
+  );
+
+  displayPosts(filtered);
+}
+
+// Chargement initial
+loadContent(currentLang);
+
+// Refresh
+window.addEventListener("focus", function() {
+  loadContent(currentLang);
+});
+
+window.addEventListener("storage", function(event) {
+  if (event.key === "update") {
+    loadContent(currentLang);
+  }
+});
+</script>
+
+<script>
+// Gérer la couleur active quand on clique sur un bouton
+document.querySelectorAll('.language-buttons button').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const lang = this.textContent.trim().toLowerCase();
+
+    // Supprimer toutes les classes actives
+    document.querySelectorAll('.language-buttons button').forEach(b => {
+      b.classList.remove('active-ar', 'active-en', 'active-fr');
+    });
+
+    // Ajouter la classe active selon le bouton
+    if(lang === 'العربية') this.classList.add('active-ar');
+    else if(lang === 'english') this.classList.add('active-en');
+    else if(lang === 'français') this.classList.add('active-fr');
+  });
+});
+
+// Optionnel : définir la couleur initiale selon currentLang
+window.addEventListener('DOMContentLoaded', () => {
+  const btn = document.querySelector(`.language-buttons button[onclick*="${currentLang}"]`);
+  if(btn) btn.click(); // simule le clic pour appliquer la couleur
+});
+</script>
+<script>
+const darkModeBtn = document.getElementById('darkModeToggle');
+
+darkModeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+});
+
+</script>
+
+
+<!-- pour 3 tire --->
+ <script>
+  // Sélection des éléments
+const menuToggle = document.getElementById("menuToggle");
+const navLinks = document.getElementById("navLinks");
+
+// État du menu : ouvert ou fermé
+let menuOpen = false;
+
+// Quand on clique sur le toggle
+menuToggle.addEventListener("click", () => {
+  menuOpen = !menuOpen; // on inverse l'état
+  if (menuOpen) {
+    navLinks.classList.add("active"); // ouvre le menu
+  } else {
+    navLinks.classList.remove("active"); // ferme le menu
+  }
+});
+
+// Optionnel : si tu veux fermer le menu quand on clique sur un lien
+const navItems = navLinks.querySelectorAll("a, button, .navlinks, .language-buttons button");
+navItems.forEach(item => {
+  item.addEventListener("click", () => {
+    navLinks.classList.remove("active");
+    menuOpen = false;
+  });
+});
+
+</script>
+
+<script>
+const music = document.getElementById('backgroundMusic');
+const musicBtn = document.getElementById('musicToggle');
+const musicSelect = document.getElementById('musicSelect');
+
+let isPlaying = false;
+
+// Initialiser la première musique
+music.src = musicSelect.value;
+
+// Jouer / Pause
+musicBtn.addEventListener('click', () => {
+  if (isPlaying) {
+    music.pause();
+    musicBtn.textContent = "▶ Play";
+    isPlaying = false;
+  } else {
+    music.play().catch(() => {
+      alert("Cliquez sur le bouton pour démarrer la musique.");
+    });
+    musicBtn.textContent = "⏸ Pause";
+    isPlaying = true;
+  }
+});
+
+// Changer de musique
+musicSelect.addEventListener('change', () => {
+  const selected = musicSelect.value;
+  const wasPlaying = isPlaying;
+
+  music.src = selected;
+  if (wasPlaying) {
+    music.play();
+  }
+  musicBtn.textContent = wasPlaying ? "⏸ Pause" : "▶ Play";
 });
 </script>
 </body>
