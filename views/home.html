@@ -8,6 +8,18 @@
 <link rel="stylesheet" href="/style.css">
  <link rel="icon" type="image" sizes="200x180" href="/uploads/Dy! (1).png">
 </head>
+<div id="loadingScreen">
+  <div class="loading-box">
+    <h3>  <strong> Bienvenue sur </strong><strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong></h3>
+    <br> 
+    <h3>لنبدا رحلتنا في عالم المعرفة</h3>
+    <br> 
+    <div class="spinner"></div>
+    <button id="startBtn">Start</button>
+  </div>
+</div>
+<body>
+  
 <header>
 <div class="navbar">
   <h1>
@@ -71,9 +83,8 @@
   <div class="marquee-content">
     Bienvenue sur <strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong>——
      MYDY est une plateforme pour lire confortablement et découvrir de nouvelles informations.——
-    MYDY is a platform to read comfortably and discover new information.——
-   MYDY هي منصة للقراءة براحة واكتشاف معلومات جديدة——
-    pour plus d'informations contactez-nous sur :<strong style="color: rgb(28, 110, 24);"> 0657274965 </strong>
+   كل يوم معلومة جديدة وافكار رائعة لا تنسى ذلك ——
+    pour plus d'informations contactez-nous sur :<strong style="color: rgb(85, 236, 77);"> 0657274965 </strong>
   </div>
 </div>
  
@@ -86,72 +97,34 @@
     <h3><strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong></h3>
   </STrong> developpé par chiguer.M
 </footer>
-
-
-<script>
+<script defer>
 let currentLang = 'fr';
+let allPosts = [];
 
+// ===============================
+// CHARGEMENT CONTENU
+// ===============================
 async function loadContent(lang) {
-  currentLang = lang;
+  try {
+    currentLang = lang;
 
-  const res = await fetch('/book/posts');
-  const posts = await res.json();
+    const res = await fetch('/book/posts', {
+      cache: "force-cache"
+    });
 
-  const container = document.getElementById('posts');
-  container.innerHTML = '';
+    const posts = await res.json();
+    allPosts = posts;
 
-  posts.forEach(post => {
-    const div = document.createElement('div');
-    div.classList.add('post');
+    displayPosts(posts);
 
-   div.innerHTML = `
-  <h2 class="${currentLang === 'ar' ? 'arabic' : ''}">
-    ${post['title_' + currentLang]}
-  </h2>
-  <img src="${post.image}" alt="Image">
-  <p class="${currentLang === 'ar' ? 'arabic' : ''}">
-    ${post['text_' + currentLang]}
-  </p>
-`;
-
-    container.appendChild(div);
-  });
-}
-
-// Chargement initial
-loadContent(currentLang);
-
-/* ===============================
-   AUTO REFRESH TOUTES LES 3 SECONDES
-=================================*/
-// Recharge quand on revient sur la page
-window.addEventListener("focus", function() {
-  loadContent(currentLang);
-});
-
-// Recharge si modification depuis auteur
-window.addEventListener("storage", function(event) {
-  if (event.key === "update") {
-    loadContent(currentLang);
+  } catch (error) {
+    console.error("Erreur chargement posts :", error);
   }
-});
-
-
-
-
-let allPosts = []; // stocker tous les posts
-
-async function loadContent(lang) {
-  currentLang = lang;
-
-  const res = await fetch('/book/posts');
-  const posts = await res.json();
-  allPosts = posts; // sauvegarde
-
-  displayPosts(posts);
 }
 
-// Fonction pour afficher les posts
+// ===============================
+// AFFICHAGE POSTS
+// ===============================
 function displayPosts(posts) {
   const container = document.getElementById('posts');
   container.innerHTML = '';
@@ -162,11 +135,11 @@ function displayPosts(posts) {
 
     div.innerHTML = `
       <h2 class="${currentLang === 'ar' ? 'arabic' : ''}">
-        ${post['title_' + currentLang]}
+        ${post['title_' + currentLang] || ''}
       </h2>
-      <img src="${post.image}" alt="Image">
+      <img src="${post.image}" alt="Image" loading="lazy">
       <p class="${currentLang === 'ar' ? 'arabic' : ''}">
-        ${post['text_' + currentLang]}
+        ${post['text_' + currentLang] || ''}
       </p>
     `;
 
@@ -174,131 +147,114 @@ function displayPosts(posts) {
   });
 }
 
-// Fonction de recherche automatique
+// ===============================
+// RECHERCHE
+// ===============================
 function searchPosts() {
   const value = document.getElementById('searchInput').value.toLowerCase();
 
   const filtered = allPosts.filter(post =>
-    post.title_fr.toLowerCase().includes(value) ||
-    post.title_en.toLowerCase().includes(value) ||
-    post.title_ar.toLowerCase().includes(value)
+    (post.title_fr || '').toLowerCase().includes(value) ||
+    (post.title_en || '').toLowerCase().includes(value) ||
+    (post.title_ar || '').toLowerCase().includes(value)
   );
 
   displayPosts(filtered);
 }
 
-// Chargement initial
-loadContent(currentLang);
-
-// Refresh
-window.addEventListener("focus", function() {
-  loadContent(currentLang);
-});
-
-window.addEventListener("storage", function(event) {
-  if (event.key === "update") {
-    loadContent(currentLang);
-  }
-});
-
-
-
-// Gérer la couleur active quand on clique sur un bouton
+// ===============================
+// LANGUE ACTIVE
+// ===============================
 document.querySelectorAll('.language-buttons button').forEach(btn => {
   btn.addEventListener('click', function() {
-    const lang = this.textContent.trim().toLowerCase();
 
-    // Supprimer toutes les classes actives
-    document.querySelectorAll('.language-buttons button').forEach(b => {
-      b.classList.remove('active-ar', 'active-en', 'active-fr');
-    });
+    document.querySelectorAll('.language-buttons button')
+      .forEach(b => b.classList.remove('active-ar','active-en','active-fr'));
 
-    // Ajouter la classe active selon le bouton
-    if(lang === 'العربية') this.classList.add('active-ar');
-    else if(lang === 'english') this.classList.add('active-en');
-    else if(lang === 'français') this.classList.add('active-fr');
+    const text = this.textContent.trim().toLowerCase();
+
+    if(text === 'العربية') this.classList.add('active-ar');
+    else if(text === 'english') this.classList.add('active-en');
+    else if(text === 'français') this.classList.add('active-fr');
+
+    loadContent(
+      text === 'english' ? 'en' :
+      text === 'العربية' ? 'ar' : 'fr'
+    );
   });
 });
 
-// Optionnel : définir la couleur initiale selon currentLang
-window.addEventListener('DOMContentLoaded', () => {
-  const btn = document.querySelector(`.language-buttons button[onclick*="${currentLang}"]`);
-  if(btn) btn.click(); // simule le clic pour appliquer la couleur
-});
-
-const darkModeBtn = document.getElementById('darkModeToggle');
-
-darkModeBtn.addEventListener('click', () => {
+// ===============================
+// DARK MODE
+// ===============================
+document.getElementById('darkModeToggle')
+.addEventListener('click', () => {
   document.body.classList.toggle('dark-mode');
 });
 
-
-
-
-
-  // Sélection des éléments
+// ===============================
+// MENU HAMBURGER
+// ===============================
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
 
-// État du menu : ouvert ou fermé
-let menuOpen = false;
-
-// Quand on clique sur le toggle
 menuToggle.addEventListener("click", () => {
-  menuOpen = !menuOpen; // on inverse l'état
-  if (menuOpen) {
-    navLinks.classList.add("active"); // ouvre le menu
-  } else {
-    navLinks.classList.remove("active"); // ferme le menu
-  }
+  navLinks.classList.toggle("active");
 });
 
-// Optionnel : si tu veux fermer le menu quand on clique sur un lien
-const navItems = navLinks.querySelectorAll("a, button, .navlinks, .language-buttons button");
-navItems.forEach(item => {
-  item.addEventListener("click", () => {
-    navLinks.classList.remove("active");
-    menuOpen = false;
-  });
-});
+// ===============================
+// MUSIQUE
+// ===============================
 const music = document.getElementById('backgroundMusic');
 const musicBtn = document.getElementById('musicToggle');
 const musicSelect = document.getElementById('musicSelect');
 
 let isPlaying = false;
 
-// Initialiser la première musique
 music.src = musicSelect.value;
 
-// Jouer / Pause
 musicBtn.addEventListener('click', () => {
   if (isPlaying) {
     music.pause();
-    musicBtn.textContent = "▶ Play";
+    musicBtn.textContent = "🎵";
     isPlaying = false;
   } else {
     music.play().catch(() => {
-      alert("Cliquez sur le bouton pour démarrer la musique.");
+      alert("Cliquez une fois pour autoriser la lecture.");
     });
-    musicBtn.textContent = "⏸ Pause";
+    musicBtn.textContent = "⏸";
     isPlaying = true;
   }
 });
 
-// Changer de musique
-// Changer de musique
 musicSelect.addEventListener('change', () => {
-  const selected = musicSelect.value;
-
-  music.src = selected;
-
-  // Toujours jouer automatiquement
-  music.play().catch(() => {
-    alert("Cliquez une fois sur Play pour autoriser la lecture.");
-  });
-
-  musicBtn.textContent = "⏸ Pause";
+  music.src = musicSelect.value;
+  music.play().catch(() => {});
+  musicBtn.textContent = "⏸";
   isPlaying = true;
+});
+
+// ===============================
+// CHARGEMENT INITIAL
+// ===============================
+window.addEventListener("DOMContentLoaded", () => {
+  loadContent(currentLang);
+});
+
+//
+const loadingScreen = document.getElementById("loadingScreen");
+const startBtn = document.getElementById("startBtn");
+const spinner = document.querySelector(".spinner");
+
+// Montrer bouton après 3 secondes EXACTES
+setTimeout(() => {
+  spinner.style.display = "none";
+  startBtn.style.display = "inline-block";
+}, 3000);
+
+// Quand on clique
+startBtn.addEventListener("click", () => {
+  loadingScreen.style.display = "none";
 });
 </script>
 </body>
