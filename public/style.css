@@ -928,6 +928,29 @@ body.dark-mode .post img {
    Navbar fixée
 ========================= */
 
+
+#loadingScreen h3{
+
+  position: absolute;
+  top: 220px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  color: #9a9595;
+
+  direction: rtl;
+  text-align: center;
+
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+  font-size: clamp(16px,2vw,26px);
+
+  white-space: nowrap;
+
+  letter-spacing: 1px;
+
+}
+
 @media (max-width: 768px) {
 .navbar {
   position: fixed;   /* Fixe la navbar */
@@ -1015,6 +1038,19 @@ padding: 2px 6px;
 margin: 0px;
 
 }
+#loadingScreen h3{
+    position: absolute;
+    top: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #9a9595;
+    direction: rtl;
+    text-align: center;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
 
 }
 
@@ -1038,27 +1074,6 @@ margin: 0px;
    PHRASE ARABE EN HAUT
 ========================= */
 
-#loadingScreen h3{
-
-  position: absolute;
-  top: 220px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  color: #9a9595;
-
-  direction: rtl;
-  text-align: center;
-
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-
-  font-size: clamp(16px,2vw,26px);
-
-  white-space: nowrap;
-
-  letter-spacing: 1px;
-
-}
 
 /* =========================
    BOITE CENTRALE
