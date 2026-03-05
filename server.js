@@ -112,10 +112,6 @@ app.get('/logout', (req, res) => {
 
 // Route API
 
-const PORT = 3001;
 
-app.listen(PORT, () => {
-  console.log(`Serveur lancé sur http://localhost:${PORT}`);
-});
 
 module.exports = app; 
