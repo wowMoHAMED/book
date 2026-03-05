@@ -196,14 +196,30 @@ document.getElementById('darkModeToggle')
 
 // ===============================
 // MENU HAMBURGER
-// ===============================
+  // Sélection des éléments
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
 
-menuToggle.addEventListener("click", () => {
+// Toggle menu sur clic du toggle
+menuToggle.addEventListener("click", (e) => {
+  e.stopPropagation(); // empêche le clic de remonter et fermer le menu immédiatement
   navLinks.classList.toggle("active");
 });
 
+// Fermer le menu si on clique ailleurs
+document.addEventListener("click", (e) => {
+  if(navLinks.classList.contains("active") && !navLinks.contains(e.target) && e.target !== menuToggle){
+    navLinks.classList.remove("active");
+  }
+});
+
+// Optionnel : fermer le menu si on clique sur un lien à l'intérieur
+const navItems = navLinks.querySelectorAll("a, button");
+navItems.forEach(item => {
+  item.addEventListener("click", () => {
+    navLinks.classList.remove("active");
+  });
+});
 // ===============================
 // MUSIQUE
 // ===============================
