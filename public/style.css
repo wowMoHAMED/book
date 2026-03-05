@@ -101,7 +101,7 @@ body {
 
 .post p {
   font-size: 0.95rem;
-  line-height: 1.4;
+  line-height: 1.8;
   color: #000000;
 }
 
@@ -1019,42 +1019,125 @@ margin: 0px;
 }
 
 /* loding*/
-#loadingScreen {
+/* =========================
+   LOADING SCREEN
+========================= */
+
+#loadingScreen{
   position: fixed;
   inset: 0;
-  background: #111;
+  background: linear-gradient(135deg,#0f0f0f,#1a1a1a);
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  flex-direction: column;
 }
 
-.loading-box {
+/* =========================
+   PHRASE ARABE EN HAUT
+========================= */
+
+#loadingScreen h3{
+
+  position: absolute;
+  top: 220px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  color: #9a9595;
+
+  direction: rtl;
   text-align: center;
-  color: white;
+
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+  font-size: clamp(16px,2vw,26px);
+
+  white-space: nowrap;
+
+  letter-spacing: 1px;
+
 }
 
-.spinner {
-  margin: 20px auto;
-  width: 50px;
-  height: 50px;
-  border: 5px solid #444;
-  border-top: 5px solid rgb(242, 99, 43);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+/* =========================
+   BOITE CENTRALE
+========================= */
+
+.loading-box{
+  text-align: center;
 }
 
-@keyframes spin {
-  100% { transform: rotate(360deg); }
+/* =========================
+   LOGO
+========================= */
+
+.loading-box h1{
+
+  font-size: 46px;
+
+  letter-spacing: 5px;
+
+  margin-bottom: 35px;
+
+  font-weight: bold;
+
 }
 
-#startBtn {
-  display: none;
-  padding: 10px 25px;
-  background: rgb(242, 99, 43);
-  color: white;
-  border: none;
-  cursor: pointer;
+/* =========================
+   BARRE DE CHARGEMENT
+========================= */
+
+.progress-bar{
+
+  width: 340px;
+
+  height: 8px;
+
+  background: #2a2a2a;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+}
+
+/* =========================
+   REMPLISSAGE
+========================= */
+
+.progress{
+
+  height: 100%;
+
+  width: 0%;
+
+  background: linear-gradient(
+    90deg,
+    rgb(242,99,43),
+    rgb(255,140,80)
+  );
+
+  border-radius: 20px;
+
+  animation: loading 5s linear forwards;
+
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes loading{
+
+  from{
+    width:0%;
+  }
+
+  to{
+    width:100%;
+  }
+
 }
 
 

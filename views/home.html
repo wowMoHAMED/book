@@ -9,13 +9,15 @@
  <link rel="icon" type="image" sizes="200x180" href="/uploads/Dy! (1).png">
 </head>
 <div id="loadingScreen">
+  <h3> كل الأمور على ما يرام في النهاية، إن لم تكن كذلك فتلك ليست النهاية</h3>
+  <br>
   <div class="loading-box">
-    <h3>  <strong> Bienvenue sur </strong><strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong></h3>
-    <br> 
-    <h3>لنبدا رحلتنا في عالم المعرفة</h3>
-    <br> 
-    <div class="spinner"></div>
-    <button id="startBtn">Start</button>
+    <h1><strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong></h1>
+ 
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+
   </div>
 </div>
 <body>
@@ -51,8 +53,8 @@
 
 <!-- Sélection de musique -->
 <select id="musicSelect">
-  <option value="/music/30 Minutes Relaxing Felt Piano __ Original Music by Jacob_s Piano(MP3_160K).mp3">calme 1</option>
-  <option value="/music/Peaceful _ Inspiring Ambient Music to draw_ relax _ study to 🧸📚✨(MP3_160K).mp3">clame 3</option>
+  <option value="/music/30 Minutes Relaxing Felt Piano __ Original Music by Jacob_s Piano(MP3_160K).mp3">music 1</option>
+  <option value="/music/Peaceful _ Inspiring Ambient Music to draw_ relax _ study to 🧸📚✨(MP3_160K).mp3">music 2</option>
 </select>
 
 
@@ -233,29 +235,17 @@ musicSelect.addEventListener('change', () => {
   musicBtn.textContent = "⏸";
   isPlaying = true;
 });
-
-// ===============================
-// CHARGEMENT INITIAL
-// ===============================
-window.addEventListener("DOMContentLoaded", () => {
-  loadContent(currentLang);
-});
-
-//
 const loadingScreen = document.getElementById("loadingScreen");
-const startBtn = document.getElementById("startBtn");
-const spinner = document.querySelector(".spinner");
 
-// Montrer bouton après 3 secondes EXACTES
-setTimeout(() => {
-  spinner.style.display = "none";
-  startBtn.style.display = "inline-block";
-}, 3000);
+// charger le contenu immédiatement en arrière-plan
+loadContent(currentLang);
 
-// Quand on clique
-startBtn.addEventListener("click", () => {
-  loadingScreen.style.display = "none";
-});
+// enlever loading après 5 secondes
+setTimeout(()=>{
+  loadingScreen.style.display="none";
+},5000);
+
+
 </script>
 </body>
 </html>
