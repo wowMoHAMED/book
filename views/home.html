@@ -34,13 +34,12 @@
 
 
 <!-- Lecteur audio caché -->
-<!-- Lecteur audio caché -->
-<audio id="backgroundMusic"></audio>
+ <audio  id="backgroundMusic"controls preload="metadata"></audio>
+
 
 <!-- Sélection de musique -->
 <select id="musicSelect">
   <option value="/music/30 Minutes Relaxing Felt Piano __ Original Music by Jacob_s Piano(MP3_160K).mp3">calme 1</option>
-  <option value="/music/Motivational Music For Creativity and Studying - Reflections Full Album(MP3_160K).mp3">clame 2</option>
   <option value="/music/Peaceful _ Inspiring Ambient Music to draw_ relax _ study to 🧸📚✨(MP3_160K).mp3">clame 3</option>
 </select>
 
@@ -87,6 +86,8 @@
     <h3><strong style="color: rgb(242, 99, 43);">M</strong> <strong style="color: rgb(96, 106, 114);">Y</strong> <strong style="color: rgb(242, 99, 43);">D</strong> <strong style="color: rgb(96, 106, 114);">Y</strong></h3>
   </STrong> developpé par chiguer.M
 </footer>
+
+
 <script>
 let currentLang = 'fr';
 
@@ -135,8 +136,8 @@ window.addEventListener("storage", function(event) {
   }
 });
 
-</script>
-<script>
+
+
 
 let allPosts = []; // stocker tous les posts
 
@@ -199,9 +200,9 @@ window.addEventListener("storage", function(event) {
     loadContent(currentLang);
   }
 });
-</script>
 
-<script>
+
+
 // Gérer la couleur active quand on clique sur un bouton
 document.querySelectorAll('.language-buttons button').forEach(btn => {
   btn.addEventListener('click', function() {
@@ -224,19 +225,17 @@ window.addEventListener('DOMContentLoaded', () => {
   const btn = document.querySelector(`.language-buttons button[onclick*="${currentLang}"]`);
   if(btn) btn.click(); // simule le clic pour appliquer la couleur
 });
-</script>
-<script>
+
 const darkModeBtn = document.getElementById('darkModeToggle');
 
 darkModeBtn.addEventListener('click', () => {
   document.body.classList.toggle('dark-mode');
 });
 
-</script>
 
 
-<!-- pour 3 tire --->
- <script>
+
+
   // Sélection des éléments
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
@@ -262,10 +261,6 @@ navItems.forEach(item => {
     menuOpen = false;
   });
 });
-
-</script>
-
-<script>
 const music = document.getElementById('backgroundMusic');
 const musicBtn = document.getElementById('musicToggle');
 const musicSelect = document.getElementById('musicSelect');
@@ -291,15 +286,19 @@ musicBtn.addEventListener('click', () => {
 });
 
 // Changer de musique
+// Changer de musique
 musicSelect.addEventListener('change', () => {
   const selected = musicSelect.value;
-  const wasPlaying = isPlaying;
 
   music.src = selected;
-  if (wasPlaying) {
-    music.play();
-  }
-  musicBtn.textContent = wasPlaying ? "⏸ Pause" : "▶ Play";
+
+  // Toujours jouer automatiquement
+  music.play().catch(() => {
+    alert("Cliquez une fois sur Play pour autoriser la lecture.");
+  });
+
+  musicBtn.textContent = "⏸ Pause";
+  isPlaying = true;
 });
 </script>
 </body>
