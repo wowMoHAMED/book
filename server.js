@@ -87,7 +87,7 @@ app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const auteur = await Auteur.findOne({ username });
   if(!auteur) return res.send('Utilisateur non trouvé');
-
+ 
   const match = await bcrypt.compare(password, auteur.password);
   if(!match) return res.send('Mot de passe incorrect');
 
@@ -111,6 +111,7 @@ app.get('/logout', (req, res) => {
 });
 
 // Route API
+
 
 
 module.exports = app;
