@@ -1047,7 +1047,7 @@ margin: 0px;
     direction: rtl;
     text-align: center;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-size: 14px;
+    font-size: 12px;
     white-space: nowrap;
     letter-spacing: 1px;
 }
@@ -1155,7 +1155,45 @@ margin: 0px;
 
 }
 
+.post p{
 
+  line-height:1.8;
+}
+
+.see-more{
+  color: rgb(242, 99, 43);
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 6px;
+}
+
+.see-more:hover{
+  text-decoration: underline;
+}
+
+.post-text{
+  display: -webkit-box;
+  -webkit-line-clamp: 5;   /* limite à 5 lignes */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.8;
+}
+
+.post-text.expanded{
+  -webkit-line-clamp: unset;
+}
+
+.see-more{
+  display:none;
+  color: rgb(242, 99, 43);
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* montrer "voir plus" seulement si texte long */
+.post-text:not(:-webkit-line-clamp) + .see-more{
+  display:inline;
+}
 
 
 

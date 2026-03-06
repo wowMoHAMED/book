@@ -17,9 +17,15 @@
     <div class="progress-bar">
       <div class="progress"></div>
     </div>
+<br>
+<br>
+<br>
+  © 2026 - <STrong>développé par Chiguer.M
+  </STrong> 
 
   </div>
 </div>
+
 <body>
   
 <header>
@@ -130,20 +136,42 @@ async function loadContent(lang) {
 function displayPosts(posts) {
   const container = document.getElementById('posts');
   container.innerHTML = '';
+ //voir plus
+ setTimeout(()=>{
 
+  document.querySelectorAll(".post").forEach(post=>{
+
+    const text = post.querySelector(".post-text");
+    const btn = post.querySelector(".see-more");
+
+    if(text.scrollHeight > text.clientHeight){
+      btn.style.display = "inline";
+    }
+
+  });
+
+},100);
   posts.forEach(post => {
+
+    const fullText = post['text_' + currentLang] || '';
+    const words = fullText.split(" ");
+    const shortText = words.slice(0, 50).join(" "); // environ 5 phrases / 50 mots
+
     const div = document.createElement('div');
     div.classList.add('post');
+div.innerHTML = `
+  <h2 class="${currentLang === 'ar' ? 'arabic' : ''}">
+    ${post['title_' + currentLang] || ''}
+  </h2>
 
-    div.innerHTML = `
-      <h2 class="${currentLang === 'ar' ? 'arabic' : ''}">
-        ${post['title_' + currentLang] || ''}
-      </h2>
-      <img src="${post.image}" alt="Image" loading="lazy">
-      <p class="${currentLang === 'ar' ? 'arabic' : ''}">
-        ${post['text_' + currentLang] || ''}
-      </p>
-    `;
+  <img src="${post.image}" alt="Image" loading="lazy">
+
+  <p class="post-text ${currentLang === 'ar' ? 'arabic' : ''}">
+    ${post['text_' + currentLang] || ''}
+  </p>
+
+  <span class="see-more" onclick="toggleText(this)">Voir plus</span>
+`;
 
     container.appendChild(div);
   });
@@ -261,7 +289,38 @@ setTimeout(()=>{
   loadingScreen.style.display="none";
 },5000);
 
+//voirs plus
+function toggleText(el){
 
+  const p = el.parentElement;
+  const shortText = p.querySelector(".short-text");
+  const fullText = p.querySelector(".full-text");
+
+  if(fullText.style.display === "none"){
+    shortText.style.display = "none";
+    fullText.style.display = "inline";
+    el.textContent = "Voir moins";
+  }else{
+    shortText.style.display = "inline";
+    fullText.style.display = "none";
+    el.textContent = "Voir plus";
+  }
+
+}
+
+function toggleText(el){
+
+  const text = el.previousElementSibling;
+
+  text.classList.toggle("expanded");
+
+  if(text.classList.contains("expanded")){
+    el.textContent = "Voir moins";
+  }else{
+    el.textContent = "Voir plus";
+  }
+
+}
 </script>
 </body>
 </html>
