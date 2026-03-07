@@ -114,41 +114,23 @@ async function loadContent(lang) {
   try {
     currentLang = lang;
 
-    const res = await fetch('/book/posts', {
-      cache: "force-cache"
-    });
-
+    const res = await fetch('/book/posts?nocache=' + Date.now());
     const posts = await res.json();
-    allPosts = posts;
 
+    allPosts = posts;
     displayPosts(posts);
 
   } catch (error) {
     console.error("Erreur chargement posts :", error);
   }
 }
-
 // ===============================
 // AFFICHAGE POSTS
 // ===============================
 function displayPosts(posts) {
   const container = document.getElementById('posts');
   container.innerHTML = '';
- //voir plus
- setTimeout(()=>{
 
-  document.querySelectorAll(".post").forEach(post=>{
-
-    const text = post.querySelector(".post-text");
-    const btn = post.querySelector(".see-more");
-
-    if(text.scrollHeight > text.clientHeight){
-      btn.style.display = "inline";
-    }
-
-  });
-
-},100);
   posts.forEach(post => {
 
     const fullText = post['text_' + currentLang] || '';
@@ -157,24 +139,24 @@ function displayPosts(posts) {
 
     const div = document.createElement('div');
     div.classList.add('post');
-div.innerHTML = `
-  <h2 class="${currentLang === 'ar' ? 'arabic' : ''}">
-    ${post['title_' + currentLang] || ''}
-  </h2>
 
-  <img src="${post.image}" alt="Image" loading="lazy">
+    div.innerHTML = `
+      <h2 class="${currentLang === 'ar' ? 'arabic' : ''}">
+        ${post['title_' + currentLang] || ''}
+      </h2>
 
-  <p class="post-text ${currentLang === 'ar' ? 'arabic' : ''}">
-    ${post['text_' + currentLang] || ''}
-  </p>
+      <img src="${post.image}" alt="Image" loading="lazy">
 
-  <span class="see-more" onclick="toggleText(this)">Voir plus</span>
-`;
+      <p class="${currentLang === 'ar' ? 'arabic' : ''}">
+        <span class="short-text">${shortText}...</span>
+        <span class="full-text" style="display:none;">${fullText}</span>
+        <span class="see-more" onclick="toggleText(this)">Voir plus</span>
+      </p>
+    `;
 
     container.appendChild(div);
   });
 }
-
 // ===============================
 // RECHERCHE
 // ===============================
@@ -306,19 +288,6 @@ function toggleText(el){
 
 }
 
-function toggleText(el){
-
-  const text = el.previousElementSibling;
-
-  text.classList.toggle("expanded");
-
-  if(text.classList.contains("expanded")){
-    el.textContent = "Voir moins";
-  }else{
-    el.textContent = "Voir plus";
-  }
-
-}
 </script>
 </body>
 </html>

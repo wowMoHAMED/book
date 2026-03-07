@@ -112,5 +112,9 @@ app.get('/logout', (req, res) => {
 
 // Route API
 
+app.use((req,res,next)=>{
+  res.set("Cache-Control","no-store");
+  next();
+});
 
-module.exports = app;    
+module.exports = app;     

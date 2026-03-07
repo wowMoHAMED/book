@@ -1172,30 +1172,3 @@ margin: 0px;
   text-decoration: underline;
 }
 
-.post-text{
-  display: -webkit-box;
-  -webkit-line-clamp: 5;   /* limite à 5 lignes */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.8;
-}
-
-.post-text.expanded{
-  -webkit-line-clamp: unset;
-}
-
-.see-more{
-  display:none;
-  color: rgb(242, 99, 43);
-  cursor:pointer;
-  font-weight:bold;
-}
-
-/* montrer "voir plus" seulement si texte long */
-.post-text:not(:-webkit-line-clamp) + .see-more{
-  display:inline;
-}
-
-
-
-
