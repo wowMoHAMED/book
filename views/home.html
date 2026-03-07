@@ -114,7 +114,9 @@ async function loadContent(lang) {
   try {
     currentLang = lang;
 
-    const res = await fetch('/book/posts?nocache=' + Date.now());
+   const res = await fetch('/book/posts', {
+  cache: "no-store"
+});
     const posts = await res.json();
 
     allPosts = posts;

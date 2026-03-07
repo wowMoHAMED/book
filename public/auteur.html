@@ -115,34 +115,24 @@ addForm.addEventListener('submit', async e => {
   const formData = new FormData(addForm);
 
   if (editingId) {
-    // UPDATE
+
     await fetch(`/book/post/${editingId}`, {
       method: 'PUT',
       body: formData
     });
 
-    message.innerText = "Post mis à jour ✔";
   } else {
-    // ADD
+
     await fetch('/book/post/add', {
       method: 'POST',
       body: formData
     });
 
-    message.innerText = "Post ajouté ✔";
   }
 
-  // Reset
-  editingId = null;
-  addForm.reset();
-  document.querySelector("button[type='submit']").innerText = "Ajouter";
-
-  // 🔥 Notifier Home
-  localStorage.setItem("update", Date.now());
-
-  loadPosts();
+  // 🔥 redirection vers Home avec refresh
+  window.location.href = "/?refresh=" + Date.now();
 });
-
 /* ===============================
    SUPPRIMER
 =================================*/
