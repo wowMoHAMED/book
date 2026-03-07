@@ -113,10 +113,8 @@ let allPosts = [];
 async function loadContent(lang) {
   try {
     currentLang = lang;
+const res = await fetch('/book/posts?t=' + Date.now());
 
-   const res = await fetch('/book/posts', {
-  cache: "no-store"
-});
     const posts = await res.json();
 
     allPosts = posts;
@@ -129,15 +127,19 @@ async function loadContent(lang) {
 // ===============================
 // AFFICHAGE POSTS
 // ===============================
-function displayPosts(posts) {
+function displayPosts(posts){
+
   const container = document.getElementById('posts');
   container.innerHTML = '';
+
+  const fragment = document.createDocumentFragment();
 
   posts.forEach(post => {
 
     const fullText = post['text_' + currentLang] || '';
     const words = fullText.split(" ");
-    const shortText = words.slice(0, 50).join(" "); // environ 5 phrases / 50 mots
+    const shortText = words.slice(0,50).join(" ");
+    const showButton = words.length > 50;
 
     const div = document.createElement('div');
     div.classList.add('post');
@@ -147,17 +149,23 @@ function displayPosts(posts) {
         ${post['title_' + currentLang] || ''}
       </h2>
 
-      <img src="${post.image}" alt="Image" loading="lazy">
+      <img src="${post.image}" loading="lazy" alt="Image">
 
       <p class="${currentLang === 'ar' ? 'arabic' : ''}">
-        <span class="short-text">${shortText}...</span>
-        <span class="full-text" style="display:none;">${fullText}</span>
-        <span class="see-more" onclick="toggleText(this)">Voir plus</span>
+        <span class="short-text">
+          ${showButton ? shortText + '...' : fullText}
+        </span>
+
+        ${showButton ? `<span class="full-text" style="display:none;">${fullText}</span>` : ""}
+
+        ${showButton ? `<span class="see-more" onclick="toggleText(this)">Voir plus</span>` : ""}
       </p>
     `;
 
-    container.appendChild(div);
+    fragment.appendChild(div);
   });
+
+  container.appendChild(fragment);
 }
 // ===============================
 // RECHERCHE
@@ -289,6 +297,10 @@ function toggleText(el){
   }
 
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadContent(currentLang);
+});
 
 </script>
 </body>
